@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ALE_Core.Utils {
-    class BlockUtils {
+    public class BlockUtils {
 
         public static int GetPcu(MySlimBlock block) {
 

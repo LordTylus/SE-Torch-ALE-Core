@@ -8,9 +8,9 @@ using VRage.Game.ModAPI;
 using VRage.Groups;
 using VRageMath;
 
-namespace ALE_GridBackup {
+namespace ALE_Core.Utils {
 
-    class GridFinder {
+    public class GridFinder {
 
         public static ConcurrentBag<List<MyCubeGrid>> FindGridList(long playerId, bool includeConnectedGrids) {
 

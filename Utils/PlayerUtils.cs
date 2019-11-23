@@ -1,11 +1,12 @@
 ﻿using Sandbox.Game.World;
 using Sandbox.ModAPI;
+using System;
 using System.Collections.Generic;
 using VRage.Game.ModAPI;
 
 namespace ALE_Core.Utils
 {
-    class PlayerUtils
+    public class PlayerUtils
     {
 
         public static MyIdentity GetIdentityByName(string playerName) {
@@ -35,6 +36,14 @@ namespace ALE_Core.Utils
                 return identity.DisplayName;
 
             return "Nobody";
+        }
+
+        public static bool IsNpc(long playerId) {
+            return MySession.Static.Players.IdentityIsNpc(playerId);
+        }
+
+        public static bool HasIdentity(long playerId) {
+            return MySession.Static.Players.HasIdentity(playerId);
         }
     }
 }

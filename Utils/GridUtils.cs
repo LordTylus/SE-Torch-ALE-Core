@@ -323,5 +323,30 @@ namespace ALE_Core.Utils {
                     Context.Respond("   " + PlayerUtils.GetPlayerNameById(pair.Key) + " = " + pair.Value + " PCU");
             }
         }
+
+        public static void TransferBlocksToBigOwner(HashSet<long> removedPlayers) {
+
+            foreach (var entity in MyEntities.GetEntities()) {
+
+                if (!(entity is MyCubeGrid grid))
+                    continue;
+
+                var newOwner = grid.BigOwners.FirstOrDefault();
+
+                /* If new owner is nobody we share with all */
+                var share = newOwner == 0 ? MyOwnershipShareModeEnum.All : MyOwnershipShareModeEnum.Faction;
+
+                foreach (var block in grid.GetFatBlocks()) {
+
+                    /* Nobody and players which werent deleted are ignored */
+                    if (block.OwnerId == 0 || !removedPlayers.Contains(block.OwnerId))
+                        continue;
+
+                    grid.ChangeOwnerRequest(grid, block, 0, MyOwnershipShareModeEnum.Faction);
+                    if (newOwner != 0)
+                        grid.ChangeOwnerRequest(grid, block, newOwner, MyOwnershipShareModeEnum.Faction);
+                }
+            }
+        }
     }
 }
