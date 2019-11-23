@@ -6,8 +6,25 @@ using VRage.Game.ModAPI;
 
 namespace ALE_Core.Utils
 {
-    public class PlayerUtils
-    {
+    public class PlayerUtils {
+
+        public static MyIdentity GetIdentityByNameOrId(string playerNameOrSteamId) {
+
+            foreach (var identity in MySession.Static.Players.GetAllIdentities()) {
+
+                if (identity.DisplayName == playerNameOrSteamId)
+                    return identity;
+
+                if (ulong.TryParse(playerNameOrSteamId, out ulong steamId)) {
+
+                    ulong id = MySession.Static.Players.TryGetSteamId(identity.IdentityId);
+                    if (id == steamId)
+                        return identity;
+                }
+            }
+
+            return null;
+        }
 
         public static MyIdentity GetIdentityByName(string playerName) {
 

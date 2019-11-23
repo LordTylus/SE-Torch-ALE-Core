@@ -110,6 +110,8 @@
     <Compile Include="Attribute\Sorting\AttributeSorter.cs" />
     <Compile Include="Attribute\Sorting\AttributeSortRule.cs" />
     <Compile Include="Attribute\IAttributeAware.cs" />
+    <Compile Include="CurrentCooldown.cs" />
+    <Compile Include="GridManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
