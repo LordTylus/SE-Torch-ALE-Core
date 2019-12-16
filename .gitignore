@@ -1,4 +1,6 @@
 
+GameBinaries/
+TorchBinaries/
 bin/
 obj/
 Properties/

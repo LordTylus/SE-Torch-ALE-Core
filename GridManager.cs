@@ -17,6 +17,22 @@ namespace ALE_Core {
 
         public static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        public static bool SaveGrid(string path, string filename, bool keepOriginalOwner, bool keepProjection, List<MyCubeGrid> grids) {
+
+            List<MyObjectBuilder_CubeGrid> objectBuilders = new List<MyObjectBuilder_CubeGrid>();
+
+            foreach (MyCubeGrid grid in grids) {
+
+                /* What else should it be? LOL? */
+                if (!(grid.GetObjectBuilder(true) is MyObjectBuilder_CubeGrid objectBuilder))
+                    throw new ArgumentException(grid + " has a ObjectBuilder thats not for a CubeGrid");
+
+                objectBuilders.Add(objectBuilder);
+            }
+
+            return SaveGrid(path, filename, keepOriginalOwner, keepProjection, objectBuilders);
+        }
+
         public static bool SaveGrid(string path, string filename, bool keepOriginalOwner, bool keepProjection, List<MyObjectBuilder_CubeGrid> objectBuilders) {
 
             MyObjectBuilder_ShipBlueprintDefinition definition = MyObjectBuilderSerializer.CreateNewObject<MyObjectBuilder_ShipBlueprintDefinition>();
