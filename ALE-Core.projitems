@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6692dde3-bd7d-4239-9230-fdd834526db2</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ALE_Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Filter\AttributeFilterDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Filter\AttributeFilterer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Filter\AttributeFilterFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Filter\AttributeFilterRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Filter\AttributeRelation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Filter\StandardAttributeFilterRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\IAttributeAware.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Sorting\AttributeNullDecision.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Sorting\AttributeSortDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Sorting\AttributeSorter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attribute\Sorting\AttributeSortRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CurrentCooldown.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GridManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BlockUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\FactionUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\GridFinder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\GridUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\OwnershipUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\PlayerUtils.cs" />
+  </ItemGroup>
+</Project>
