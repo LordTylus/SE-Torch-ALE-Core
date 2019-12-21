@@ -12,7 +12,18 @@ namespace ALE_Core.Utils
 {
     public class FactionUtils
     {
-        Logger log = LogManager.GetCurrentClassLogger();
+
+        public static IMyFaction GetPlayerFaction(long playerId) {
+            return MySession.Static.Factions.TryGetPlayerFaction(playerId);
+        }
+
+        public static bool HavePlayersSameFaction(long playerId1, long playerId2) {
+
+            var faction1 = GetPlayerFaction(playerId1);
+            var faction2 = GetPlayerFaction(playerId2);
+
+            return faction1 == faction2;
+        }
 
         public static string GetPlayerFactionTag(long playerId) {
 

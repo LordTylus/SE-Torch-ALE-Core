@@ -11,6 +11,20 @@ namespace ALE_Core.Utils {
 
     public class OwnershipUtils {
 
+        public static long GetOwner(MyCubeGrid grid) {
+
+            var gridOwnerList = grid.BigOwners;
+            var ownerCnt = gridOwnerList.Count;
+            var gridOwner = 0L;
+
+            if (ownerCnt > 0 && gridOwnerList[0] != 0)
+                return gridOwnerList[0];
+            else if (ownerCnt > 1)
+                return gridOwnerList[1];
+
+            return gridOwner;
+        }
+
         public static Dictionary<long, BuildStats> FindBuildStatsPerPlayer() {
 
             Dictionary<long, BuildStats> stats = new Dictionary<long, BuildStats>();

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Torch.Commands;
 using VRage.Game;
+using VRage.Game.ModAPI;
 using VRage.Groups;
 using VRage.Network;
 using VRage.ObjectBuilders;
@@ -24,14 +25,7 @@ namespace ALE_Core.Utils {
 
                 MyCubeGrid grid = groupNodes.NodeData;
 
-                var gridOwnerList = grid.BigOwners;
-                var ownerCnt = gridOwnerList.Count;
-                var gridOwner = 0L;
-
-                if (ownerCnt > 0 && gridOwnerList[0] != 0)
-                    gridOwner = gridOwnerList[0];
-                else if (ownerCnt > 1)
-                    gridOwner = gridOwnerList[1];
+                var gridOwner = OwnershipUtils.GetOwner(grid);
 
                 HashSet<MySlimBlock> blocks = grid.GetBlocks();
                 foreach (MySlimBlock block in blocks) {
