@@ -40,41 +40,38 @@ namespace ALE_Core {
             definition.Id = new MyDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_ShipBlueprintDefinition)), filename);
             definition.CubeGrids = objectBuilders.Select(x => (MyObjectBuilder_CubeGrid)x.Clone()).ToArray();
 
-            if (!keepOriginalOwner || !keepProjection) {
+            /* Reset ownership as it will be different on the new server anyway */
+            foreach (MyObjectBuilder_CubeGrid cubeGrid in definition.CubeGrids) {
+                foreach (MyObjectBuilder_CubeBlock cubeBlock in cubeGrid.CubeBlocks) {
 
-                /* Reset ownership as it will be different on the new server anyway */
-                foreach (MyObjectBuilder_CubeGrid cubeGrid in definition.CubeGrids) {
-                    foreach (MyObjectBuilder_CubeBlock cubeBlock in cubeGrid.CubeBlocks) {
+                    if(!keepOriginalOwner) {
+                        cubeBlock.Owner = 0L;
+                        cubeBlock.BuiltBy = 0L;
+                    }
 
-                        if(!keepOriginalOwner) {
-                            cubeBlock.Owner = 0L;
-                            cubeBlock.BuiltBy = 0L;
-                        }
+                    /* Remove Projections if not needed */
+                    if(!keepProjection) 
+                        if (cubeBlock is MyObjectBuilder_ProjectorBase projector)
+                            projector.ProjectedGrids = null;
 
-                        /* Remove Projections if not needed */
-                        if(!keepProjection) 
-                            if (cubeBlock is MyObjectBuilder_ProjectorBase projector)
-                                projector.ProjectedGrids = null;
+                    /* Remove Pilot and Components (like Characters) from cockpits */
+                    if (cubeBlock is MyObjectBuilder_Cockpit cockpit) {
 
-                        /* Remove Pilot and Components (like Characters) from cockpits */
-                        if (cubeBlock is MyObjectBuilder_Cockpit cockpit) {
+                        cockpit.Pilot = null;
 
-                            cockpit.Pilot = null;
+                        if (cockpit.ComponentContainer != null) {
 
-                            if (cockpit.ComponentContainer != null) {
+                            var components = cockpit.ComponentContainer.Components;
 
-                                var components = cockpit.ComponentContainer.Components;
+                            if (components != null) {
 
-                                if (components != null) {
+                                for (int i = components.Count - 1; i >= 0; i--) {
 
-                                    for (int i = components.Count - 1; i >= 0; i--) {
+                                    var component = components[i];
 
-                                        var component = components[i];
-
-                                        if (component.TypeId == "MyHierarchyComponentBase") {
-                                            components.RemoveAt(i);
-                                            continue;
-                                        }
+                                    if (component.TypeId == "MyHierarchyComponentBase") {
+                                        components.RemoveAt(i);
+                                        continue;
                                     }
                                 }
                             }
