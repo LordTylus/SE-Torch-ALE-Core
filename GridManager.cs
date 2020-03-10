@@ -134,6 +134,7 @@ namespace ALE_Core {
                 return false;
             }
 
+            List<MyObjectBuilder_EntityBase> objectBuilderList = new List<MyObjectBuilder_EntityBase>(grids.ToList());
 
             if (!keepOriginalLocation) {
 
@@ -184,10 +185,19 @@ namespace ALE_Core {
             }
 
             /* Remapping to prevent any key problems upon paste. */
-            MyEntities.RemapObjectBuilderCollection(grids);
+            MyEntities.RemapObjectBuilderCollection(objectBuilderList);
+            
+            bool hasMultipleGrids = objectBuilderList.Count > 1;
 
-            foreach (var grid in grids) 
-                MyEntities.CreateFromObjectBuilderParallel(grid, true);
+            if (!hasMultipleGrids) {
+
+                foreach (var ob in objectBuilderList)
+                    MyEntities.CreateFromObjectBuilderParallel(ob, true);
+
+            } else {
+
+                MyEntities.Load(objectBuilderList);
+            }
 
             return true;
         }
