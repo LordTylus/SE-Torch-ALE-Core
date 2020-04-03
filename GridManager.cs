@@ -6,6 +6,7 @@ using Sandbox;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game.Entities;
 using Torch.Commands;
+using VRage;
 using VRage.Game;
 using VRage.Game.Entity;
 using VRage.ObjectBuilders;
@@ -182,6 +183,13 @@ namespace ALE_Core {
                         return false;
                     }
                 }
+            }
+
+            /* Stop grids */
+            foreach (var grid in grids) {
+
+                grid.AngularVelocity = new SerializableVector3();
+                grid.LinearVelocity = new SerializableVector3();
             }
 
             /* Remapping to prevent any key problems upon paste. */
