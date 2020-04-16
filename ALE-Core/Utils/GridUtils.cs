@@ -226,7 +226,7 @@ namespace ALE_Core.Utils {
                 else if (pcu)
                     Context.Respond("PCU was removed!");
                 else if (ownership)
-                    Context.Respond("Ownership was re,m!");
+                    Context.Respond("Ownership was removed!");
 
             } catch (Exception e) {
                 Context.Respond("Error Transferring Ship!");

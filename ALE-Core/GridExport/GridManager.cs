@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NLog;
 using Sandbox;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game.Entities;
-using Torch.Commands;
 using VRage;
 using VRage.Game;
 using VRage.Game.Entity;
 using VRage.ObjectBuilders;
 using VRageMath;
 
-namespace ALE_Core {
+namespace ALE_Core.GridExport {
 
     public class GridManager {
 
@@ -87,52 +87,46 @@ namespace ALE_Core {
             return MyObjectBuilderSerializer.SerializeXML(path, false, builderDefinition);
         }
 
-        public static bool LoadGrid(string path, Vector3D playerPosition, bool keepOriginalLocation, bool force = false, CommandContext context = null) {
+        public static GridImportResult LoadGrid(string path, Vector3D playerPosition, bool keepOriginalLocation, bool force = false) {
+
+            if (!File.Exists(path))
+                return GridImportResult.FILE_NOT_FOUND;
 
             if (MyObjectBuilderSerializer.DeserializeXML(path, out MyObjectBuilder_Definitions myObjectBuilder_Definitions)) {
 
                 var shipBlueprints = myObjectBuilder_Definitions.ShipBlueprints;
 
                 if (shipBlueprints == null) {
-
                     Log.Warn("No ShipBlueprints in File '" + path + "'");
-
-                    if (context != null)
-                        context.Respond("There arent any Grids in your file to import!");
-
-                    return false;
+                    return GridImportResult.NO_GRIDS_IN_FILE;
                 }
                     
-                foreach(var shipBlueprint in shipBlueprints) { 
+                foreach(var shipBlueprint in shipBlueprints) {
 
-                    if(!LoadShipBlueprint(shipBlueprint, playerPosition, keepOriginalLocation, context, force)) {
+                    var result = LoadShipBlueprint(shipBlueprint, playerPosition, keepOriginalLocation, force);
 
+                    if (result != GridImportResult.OK) {
                         Log.Warn("Error Loading ShipBlueprints from File '" + path + "'");
-                        return false;
+                        return result;
                     }
                 }
 
-                return true;
+                return GridImportResult.OK;
             }
 
             Log.Warn("Error Loading File '" + path + "' check Keen Logs.");
 
-            return false;
+            return GridImportResult.UNKNOWN_ERROR;
         }
 
-        private static bool LoadShipBlueprint(MyObjectBuilder_ShipBlueprintDefinition shipBlueprint, 
-            Vector3D playerPosition, bool keepOriginalLocation, CommandContext context = null, bool force = false) {
+        private static GridImportResult LoadShipBlueprint(MyObjectBuilder_ShipBlueprintDefinition shipBlueprint, 
+            Vector3D playerPosition, bool keepOriginalLocation, bool force = false) {
 
             var grids = shipBlueprint.CubeGrids;
 
             if(grids == null || grids.Length == 0) {
-
                 Log.Warn("No grids in blueprint!");
-
-                if (context != null)
-                    context.Respond("No grids in blueprint!");
-
-                return false;
+                return GridImportResult.NO_GRIDS_IN_BLUEPRINT;
             }
 
             List<MyObjectBuilder_EntityBase> objectBuilderList = new List<MyObjectBuilder_EntityBase>(grids.ToList());
@@ -142,25 +136,15 @@ namespace ALE_Core {
                 /* Where do we want to paste the grids? Lets find out. */
                 var pos = FindPastePosition(grids, playerPosition);
                 if (pos == null) {
-
                     Log.Warn("No free Space found!");
-
-                    if (context != null)
-                        context.Respond("No free space available!");
-
-                    return false;
+                    return GridImportResult.NO_FREE_SPACE_AVAILABLE;
                 }
 
                 var newPosition = pos.Value;
 
                 /* Update GridsPosition if that doesnt work get out of here. */
-                if (!UpdateGridsPosition(grids, newPosition)) {
-
-                    if (context != null)
-                        context.Respond("The File to be imported does not seem to be compatible with the server!");
-
-                    return false;
-                }
+                if (!UpdateGridsPosition(grids, newPosition))
+                    return GridImportResult.NOT_COMPATIBLE;
 
             } else if (!force) {
 
@@ -173,16 +157,9 @@ namespace ALE_Core {
                 List<MyEntity> entities = new List<MyEntity>();
                 MyGamePruningStructure.GetAllTopMostEntitiesInSphere(ref sphere, entities);
 
-                foreach (var entity in entities) {
-
-                    if (entity is MyCubeGrid) {
-
-                        if (context != null)
-                            context.Respond("There are potentially other grids in the way. If you are certain is free you can set 'force' to true!");
-
-                        return false;
-                    }
-                }
+                foreach (var entity in entities) 
+                    if (entity is MyCubeGrid) 
+                        return GridImportResult.POTENTIAL_BLOCKED_SPACE;
             }
 
             /* Stop grids */
@@ -207,7 +184,7 @@ namespace ALE_Core {
                 MyEntities.Load(objectBuilderList);
             }
 
-            return true;
+            return GridImportResult.OK;
         }
 
         private static bool UpdateGridsPosition(MyObjectBuilder_CubeGrid[] grids, Vector3D newPosition) {

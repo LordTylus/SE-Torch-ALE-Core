@@ -22,7 +22,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Attribute\Sorting\AttributeSortRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Cooldown\CooldownManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Cooldown\CurrentCooldown.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\GridManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\GridExport\GridImportResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\GridExport\GridImportResultWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\GridExport\GridManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\BlockUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\FactionUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\GridFinder.cs" />
