@@ -8,6 +8,14 @@ namespace ALE_Core.Utils
 {
     public class PlayerUtils {
 
+        public static ulong GetSteamId(IMyPlayer player) {
+
+            if (player == null)
+                return 0L;
+
+            return player.SteamUserId;
+        }
+
         public static MyIdentity GetIdentityByNameOrId(string playerNameOrSteamId) {
 
             foreach (var identity in MySession.Static.Players.GetAllIdentities()) {

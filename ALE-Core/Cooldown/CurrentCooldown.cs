@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ALE_Core {
+namespace ALE_Core.Cooldown {
 
     public class CurrentCooldown {
 

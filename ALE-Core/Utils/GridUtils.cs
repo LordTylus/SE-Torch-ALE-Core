@@ -8,10 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Torch.Commands;
 using VRage.Game;
-using VRage.Game.ModAPI;
 using VRage.Groups;
 using VRage.Network;
-using VRage.ObjectBuilders;
 
 namespace ALE_Core.Utils {
 
