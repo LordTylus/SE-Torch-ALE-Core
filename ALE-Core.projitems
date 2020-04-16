@@ -20,8 +20,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Attribute\Sorting\AttributeSortDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Attribute\Sorting\AttributeSorter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Attribute\Sorting\AttributeSortRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Cooldown\EntityIdCooldownKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Cooldown\SteamIdCooldownKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Cooldown\CooldownManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Cooldown\CurrentCooldown.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Cooldown\ICooldownKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\GridExport\GridImportResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\GridExport\GridImportResultWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\GridExport\GridManager.cs" />
