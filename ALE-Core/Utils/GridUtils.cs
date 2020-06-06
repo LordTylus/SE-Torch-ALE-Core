@@ -13,6 +13,22 @@ namespace ALE_Core.Utils {
 
         public static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        public static MyCubeGrid GetBiggestGridInGroup(IEnumerable<MyCubeGrid> grids) {
+
+            MyCubeGrid biggestGrid = null;
+
+            foreach (var grid in grids) {
+
+                if (grid.Physics == null)
+                    continue;
+
+                if (biggestGrid == null || biggestGrid.BlocksCount < grid.BlocksCount)
+                    biggestGrid = grid;
+            }
+
+            return biggestGrid;
+        }
+
         public static bool Repair(MyGroups<MyCubeGrid, MyGridPhysicalGroupData>.Group group, CommandContext Context) {
 
             foreach (MyGroups<MyCubeGrid, MyGridPhysicalGroupData>.Node groupNodes in group.Nodes) {

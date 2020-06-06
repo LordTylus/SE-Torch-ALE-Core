@@ -70,5 +70,17 @@ namespace ALE_Core.Utils
         public static bool HasIdentity(long playerId) {
             return MySession.Static.Players.HasIdentity(playerId);
         }
+
+        public static DateTime GetLastSeenDate(MyIdentity identity) {
+
+            var lastLogoutTime = identity.LastLogoutTime;
+            var lastLoginTime = identity.LastLoginTime;
+
+            var date = lastLogoutTime;
+            if (lastLoginTime > lastLogoutTime)
+                date = lastLoginTime;
+
+            return date;
+        }
     }
 }
