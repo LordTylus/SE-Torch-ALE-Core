@@ -3,6 +3,7 @@ using Sandbox.Game.Entities;
 using Sandbox.Game.Entities.Cube;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Torch.Commands;
 using VRage.Game;
 using VRage.Groups;
@@ -12,6 +13,48 @@ namespace ALE_Core.Utils {
     public class GridUtils {
 
         public static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        private static string WildCardToRegular(string value) {
+            return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
+        }
+
+        public static bool MatchesGridNameOrIdWithWildcard(MyCubeGrid grid, string nameOrId) {
+
+            if (nameOrId == null)
+                return true;
+
+            string gridName = grid.DisplayName;
+
+            var regex = WildCardToRegular(nameOrId);
+
+            if (Regex.IsMatch(gridName, regex))
+                return true;
+
+            string entityIdAsString = grid.EntityId + "";
+
+            if (Regex.IsMatch(entityIdAsString, regex))
+                return true;
+
+            return false;
+        }
+
+        public static bool MatchesGridNameOrId(MyCubeGrid grid, string nameOrId) {
+
+            if (nameOrId == null)
+                return true;
+
+            string gridName = grid.DisplayName;
+
+            if (gridName.Equals(nameOrId))
+                return true;
+
+            string entityIdAsString = grid.EntityId + "";
+
+            if (entityIdAsString.Equals(nameOrId))
+                return true;
+
+            return false;
+        }
 
         public static MyCubeGrid GetBiggestGridInGroup(IEnumerable<MyCubeGrid> grids) {
 
