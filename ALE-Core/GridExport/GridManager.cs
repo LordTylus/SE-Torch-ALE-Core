@@ -181,7 +181,7 @@ namespace ALE_Core.GridExport {
 
             } else {
 
-                MyEntities.Load(objectBuilderList);
+                MyEntities.Load(objectBuilderList, out _);
             }
 
             return GridImportResult.OK;
