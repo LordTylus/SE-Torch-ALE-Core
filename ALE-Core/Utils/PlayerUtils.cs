@@ -23,6 +23,10 @@ namespace ALE_Core.Utils
                 if (identity.DisplayName == playerNameOrSteamId)
                     return identity;
 
+                if (long.TryParse(playerNameOrSteamId, out long identityId)) 
+                    if (identity.IdentityId == identityId)
+                        return identity;
+
                 if (ulong.TryParse(playerNameOrSteamId, out ulong steamId)) {
 
                     ulong id = MySession.Static.Players.TryGetSteamId(identity.IdentityId);
