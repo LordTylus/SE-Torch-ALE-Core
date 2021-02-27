@@ -1,5 +1,6 @@
 ﻿using NLog;
 using Sandbox.Game.Entities;
+using Sandbox.Game.Entities.Blocks;
 using Sandbox.Game.Entities.Cube;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace ALE_Core.Utils {
     public class GridUtils {
 
         public static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        private static readonly MyDefinitionId OXYGEN_DEFINITION = MyDefinitionId.Parse("MyObjectBuilder_GasProperties/Oxygen");
+        private static readonly MyDefinitionId HYDROGEN_DEFINITION = MyDefinitionId.Parse("MyObjectBuilder_GasProperties/Hydrogen");
 
         private static string WildCardToRegular(string value) {
             return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
@@ -103,6 +107,71 @@ namespace ALE_Core.Utils {
                     }
                 }
             }
+
+            return true;
+        }
+
+        public static bool Recharge(MyGroups<MyCubeGrid, MyGridPhysicalGroupData>.Group group, string blockpairName, float fillPercentage, CommandContext Context) {
+
+            int changedBlocks = 0;
+            int changedGrids = 0;
+
+            foreach (MyGroups<MyCubeGrid, MyGridPhysicalGroupData>.Node groupNodes in group.Nodes) {
+
+                MyCubeGrid grid = groupNodes.NodeData;
+                bool gridChanged = false;
+
+                HashSet<MySlimBlock> blocks = grid.GetBlocks();
+
+                foreach (MySlimBlock block in blocks) {
+
+                    MyCubeBlock cubeBlock = block.FatBlock;
+
+                    if (cubeBlock != null) {
+
+                        if (blockpairName == "battery" && cubeBlock is MyBatteryBlock battery) {
+
+                            battery.CurrentStoredPower = battery.MaxStoredPower * fillPercentage;
+
+                            changedBlocks++;
+                            gridChanged = true;
+                        }
+
+                        if (blockpairName == "jumpdrive" && cubeBlock is MyJumpDrive jumpDrive) {
+
+                            jumpDrive.CurrentStoredPower = jumpDrive.BlockDefinition.PowerNeededForJump * fillPercentage;
+
+                            changedBlocks++;
+                            gridChanged = true;
+                        }
+
+                        if ((blockpairName == "o2tank" || blockpairName == "tank") 
+                            && cubeBlock is MyGasTank o2tank
+                            && o2tank.BlockDefinition.StoredGasId == OXYGEN_DEFINITION) {
+
+                            o2tank.ChangeFillRatioAmount(fillPercentage);
+
+                            changedBlocks++;
+                            gridChanged = true;
+                        }
+
+                        if ((blockpairName == "h2tank" || blockpairName == "tank")
+                            && cubeBlock is MyGasTank h2tank
+                            && h2tank.BlockDefinition.StoredGasId == HYDROGEN_DEFINITION) {
+
+                            h2tank.ChangeFillRatioAmount(fillPercentage);
+
+                            changedBlocks++;
+                            gridChanged = true;
+                        }
+                    }
+                }
+
+                if (gridChanged)
+                    changedGrids++;
+            }
+
+            Context.Respond(changedBlocks + " blocks on " + changedGrids + " grids recharged to "+(fillPercentage*100).ToString("0.0") +"%!");
 
             return true;
         }
