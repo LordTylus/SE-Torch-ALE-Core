@@ -6,7 +6,7 @@ namespace ALE_Core.Cooldown {
     
     public class EntityIdCooldownKey : ICooldownKey {
 
-        private long EntityId { get; }
+        public long EntityId { get; }
 
         public EntityIdCooldownKey(long EntityId) {
             this.EntityId = EntityId;
