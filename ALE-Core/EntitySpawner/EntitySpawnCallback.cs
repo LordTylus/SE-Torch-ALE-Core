@@ -1,5 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using VRage.Collections;
+﻿using System.Collections.Generic;
+using VRage;
 using VRage.ModAPI;
 
 namespace ALE_Core.EntitySpawner {
@@ -8,7 +8,9 @@ namespace ALE_Core.EntitySpawner {
         
         private int targetGridCount;
 
-        private readonly MyConcurrentList<IMyEntity> currentGridsList = new MyConcurrentList<IMyEntity>();
+        private readonly FastResourceLock m_lock = new FastResourceLock();
+        
+        private readonly List<IMyEntity> currentGridsList = new List<IMyEntity>();
 
         public EntitySpawnCallback(int targetGridCount) {
             this.targetGridCount = targetGridCount;
@@ -28,16 +30,19 @@ namespace ALE_Core.EntitySpawner {
         /// 
         /// In such case the the Entities will never be added. 
         /// </summary>
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Call(IMyEntity ent) {
 
-            MyEntityManager.PrepareEntityForAdding(ent);
-            currentGridsList.Add(ent);
+            /* Using Keens Fast Resource Lock to make sure threads arent bitching around here. */
+            using (m_lock.AcquireExclusiveUsing()) {
 
-            if (currentGridsList.Count < targetGridCount)
-                return;
+                MyEntityManager.PrepareEntityForAdding(ent);
+                currentGridsList.Add(ent);
 
-            MyEntityManager.AddEntitiesToScene(currentGridsList);
+                if (currentGridsList.Count < targetGridCount)
+                    return;
+
+                MyEntityManager.AddEntitiesToScene(currentGridsList);
+            }
         }
     }
 }
