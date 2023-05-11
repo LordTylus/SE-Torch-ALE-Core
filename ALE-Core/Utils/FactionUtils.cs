@@ -28,6 +28,17 @@ namespace ALE_Core.Utils
             return faction.Tag;
         }
 
+        public static string GetFactionTagStringForPlayer(long playerId) {
+
+            IMyFaction faction = GetPlayerFaction(playerId);
+
+            string factionString = "";
+            if (faction != null)
+                factionString = "[" + faction.Tag + "]";
+
+            return factionString;
+        }
+
         public static IMyFaction GetIdentityByTag(string tag) {
             return MySession.Static.Factions.TryGetFactionByTag(tag);
         }
