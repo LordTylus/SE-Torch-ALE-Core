@@ -8,8 +8,9 @@ namespace ALE_Core.Utils
 {
     public class PlayerUtils {
 
-        private static readonly string XBOX_ICON = "";
         private static readonly char PC_ICON = (char) 0xE030;
+        private static readonly char PS_ICON = (char) 0xE031;
+        private static readonly char XBOX_ICON = (char)0xE032;
 
         public static bool isOnline(long playerId) {
             return MySession.Static.Players.IsPlayerOnline(playerId);
@@ -33,6 +34,9 @@ namespace ALE_Core.Utils
                 if (identity.DisplayName == PC_ICON + playerNameOrSteamId)
                     return identity;
 
+                if (identity.DisplayName == PS_ICON + playerNameOrSteamId)
+                    return identity;
+
                 if (identity.DisplayName == XBOX_ICON + playerNameOrSteamId)
                     return identity;
 
@@ -51,6 +55,24 @@ namespace ALE_Core.Utils
             return null;
         }
 
+        public static string GetDisplayNameWithoutIcon(long identityId) {
+
+            MyIdentity identity = GetIdentityById(identityId);
+
+            if (identity != null)
+                return GetDisplayNameWithoutIcon(identity);
+
+            return "Nobody";
+        }
+
+        public static string GetDisplayNameWithoutIcon(IMyIdentity identity) {
+
+            return identity.DisplayName
+                .Replace(PC_ICON.ToString(), "")
+                .Replace(PS_ICON.ToString(), "")
+                .Replace(XBOX_ICON.ToString(), "");
+        }
+
         public static MyIdentity GetIdentityByName(string playerName) {
 
             foreach (var identity in MySession.Static.Players.GetAllIdentities()) {
@@ -59,6 +81,9 @@ namespace ALE_Core.Utils
                     return identity;
 
                 if (identity.DisplayName == PC_ICON + playerName)
+                    return identity;
+
+                if (identity.DisplayName == PS_ICON + playerName)
                     return identity;
 
                 if (identity.DisplayName == XBOX_ICON + playerName)
