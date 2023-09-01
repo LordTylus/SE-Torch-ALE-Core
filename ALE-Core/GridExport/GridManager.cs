@@ -10,6 +10,7 @@ using VRage;
 using VRage.Game;
 using VRage.Game.Entity;
 using VRage.ObjectBuilders;
+using VRage.ObjectBuilders.Private;
 using VRageMath;
 
 namespace ALE_Core.GridExport {
@@ -36,7 +37,7 @@ namespace ALE_Core.GridExport {
 
         public static bool SaveGrid(string path, string filename, bool keepOriginalOwner, bool keepProjection, List<MyObjectBuilder_CubeGrid> objectBuilders) {
 
-            MyObjectBuilder_ShipBlueprintDefinition definition = MyObjectBuilderSerializer.CreateNewObject<MyObjectBuilder_ShipBlueprintDefinition>();
+            MyObjectBuilder_ShipBlueprintDefinition definition = MyObjectBuilderSerializerKeen.CreateNewObject<MyObjectBuilder_ShipBlueprintDefinition>();
 
             definition.Id = new MyDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_ShipBlueprintDefinition)), filename);
             definition.CubeGrids = objectBuilders.Select(x => (MyObjectBuilder_CubeGrid)x.Clone()).ToArray();
@@ -81,10 +82,10 @@ namespace ALE_Core.GridExport {
                 }
             }
 
-            MyObjectBuilder_Definitions builderDefinition = MyObjectBuilderSerializer.CreateNewObject<MyObjectBuilder_Definitions>();
+            MyObjectBuilder_Definitions builderDefinition = MyObjectBuilderSerializerKeen.CreateNewObject<MyObjectBuilder_Definitions>();
             builderDefinition.ShipBlueprints = new MyObjectBuilder_ShipBlueprintDefinition[] { definition };
 
-            return MyObjectBuilderSerializer.SerializeXML(path, false, builderDefinition);
+            return MyObjectBuilderSerializerKeen.SerializeXML(path, false, builderDefinition);
         }
 
         public static GridImportResult LoadGrid(string path, Vector3D playerPosition, bool keepOriginalLocation, bool force = false) {
@@ -92,7 +93,7 @@ namespace ALE_Core.GridExport {
             if (!File.Exists(path))
                 return GridImportResult.FILE_NOT_FOUND;
 
-            if (MyObjectBuilderSerializer.DeserializeXML(path, out MyObjectBuilder_Definitions myObjectBuilder_Definitions)) {
+            if (MyObjectBuilderSerializerKeen.DeserializeXML(path, out MyObjectBuilder_Definitions myObjectBuilder_Definitions)) {
 
                 var shipBlueprints = myObjectBuilder_Definitions.ShipBlueprints;
 
