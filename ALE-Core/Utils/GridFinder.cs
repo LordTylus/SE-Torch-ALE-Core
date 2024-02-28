@@ -1,5 +1,7 @@
-﻿using Sandbox.Game.Entities;
+﻿using NLog;
+using Sandbox.Game.Entities;
 using Sandbox.Game.Entities.Character;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,8 @@ namespace ALE_Core.Utils {
 
     public class GridFinder {
 
+        public static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public static ConcurrentBag<List<MyCubeGrid>> FindGridList(long playerId, bool includeConnectedGrids) {
 
             ConcurrentBag<List<MyCubeGrid>> grids = new ConcurrentBag<List<MyCubeGrid>>();
@@ -20,40 +24,52 @@ namespace ALE_Core.Utils {
 
                 Parallel.ForEach(MyCubeGridGroups.Static.Physical.Groups, group => {
 
-                    List<MyCubeGrid> gridList = new List<MyCubeGrid>();
+                    try {
 
-                    foreach (MyGroups<MyCubeGrid, MyGridPhysicalGroupData>.Node groupNodes in group.Nodes) {
+                        List<MyCubeGrid> gridList = new List<MyCubeGrid>();
 
-                        MyCubeGrid grid = groupNodes.NodeData;
+                        foreach (MyGroups<MyCubeGrid, MyGridPhysicalGroupData>.Node groupNodes in group.Nodes) {
 
-                        if (grid.Physics == null)
-                            continue;
+                            MyCubeGrid grid = groupNodes.NodeData;
 
-                        gridList.Add(grid);
+                            if (grid.Physics == null)
+                                continue;
+
+                            gridList.Add(grid);
+                        }
+
+                        if (IsPlayerIdCorrect(playerId, gridList))
+                            grids.Add(gridList);
+
+                    } catch (Exception e) {
+                        Log.Error(e, "Error checking Group");
                     }
-
-                    if (IsPlayerIdCorrect(playerId, gridList))
-                        grids.Add(gridList);
                 });
 
             } else {
 
                 Parallel.ForEach(MyCubeGridGroups.Static.Mechanical.Groups, group => {
 
-                    List<MyCubeGrid> gridList = new List<MyCubeGrid>();
+                    try {
 
-                    foreach (MyGroups<MyCubeGrid, MyGridMechanicalGroupData>.Node groupNodes in group.Nodes) {
+                        List<MyCubeGrid> gridList = new List<MyCubeGrid>();
 
-                        MyCubeGrid grid = groupNodes.NodeData;
+                        foreach (MyGroups<MyCubeGrid, MyGridMechanicalGroupData>.Node groupNodes in group.Nodes) {
 
-                        if (grid.Physics == null)
-                            continue;
+                            MyCubeGrid grid = groupNodes.NodeData;
 
-                        gridList.Add(grid);
+                            if (grid.Physics == null)
+                                continue;
+
+                            gridList.Add(grid);
+                        }
+
+                        if (IsPlayerIdCorrect(playerId, gridList))
+                            grids.Add(gridList);
+
+                    } catch (Exception e) {
+                        Log.Error(e, "Error checking Group");
                     }
-
-                    if(IsPlayerIdCorrect(playerId, gridList))
-                        grids.Add(gridList);
                 });
             }
 
