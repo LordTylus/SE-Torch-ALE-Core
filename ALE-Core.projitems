@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\EntitySpawner\EntitySpawnCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\EntitySpawner\EntitySpawner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\BlockUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\FileUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\FactionUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\GridFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ALE-Core\Utils\GridUtils.cs" />
