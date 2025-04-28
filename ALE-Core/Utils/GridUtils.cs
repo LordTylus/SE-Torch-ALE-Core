@@ -139,7 +139,7 @@ namespace ALE_Core.Utils {
 
                         if (blockpairName == "jumpdrive" && cubeBlock is MyJumpDrive jumpDrive) {
 
-                            jumpDrive.CurrentStoredPower = jumpDrive.BlockDefinition.PowerNeededForJump * fillPercentage;
+                            jumpDrive.SetStoredPower(fillPercentage);
 
                             changedBlocks++;
                             gridChanged = true;
